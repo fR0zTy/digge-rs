@@ -5,12 +5,14 @@ use bevy_ecs_tilemap::prelude::*;
 use camera::CameraPlugin;
 
 // Map size represents the number of tiles in each direction
-const MAP_XSIZE: u32 = 8;
-const MAP_YSIZE: u32 = 8;
+const MAP_XSIZE: u32 = 64;
+const MAP_YSIZE: u32 = 64;
 
 // Tile size represents the number of world units per tile
-const TILE_XSIZE: f32 = 16.0;
-const TILE_YSIZE: f32 = 16.0;
+// Since by default bevy maps 1 world unit to 1 pixel. Using them interchangably is fine.
+// NOTE: This size must match with the texture size for default ScalingMode.
+const TILE_XSIZE: f32 = 32.0;
+const TILE_YSIZE: f32 = 32.0;
 
 fn spawn_tilemap(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Create a tilemap entity a little early.
@@ -55,7 +57,7 @@ fn spawn_tilemap(mut commands: Commands, asset_server: Res<AssetServer>) {
     let map_type = TilemapType::default();
 
     // Load a texture to be used for displaying the tiles;
-    let texture_handle: Handle<Image> = asset_server.load("tiles.png");
+    let texture_handle: Handle<Image> = asset_server.load("tile.png");
     commands.entity(tilemap_entity).insert(TilemapBundle {
         grid_size,
         map_type,
@@ -70,6 +72,7 @@ fn spawn_tilemap(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 fn main() {
     App::new()
+        .insert_resource(ClearColor(Color::WHITE))
         .add_plugins(DefaultPlugins)
         .add_plugins(TilemapPlugin)
         .add_plugins(CameraPlugin)
