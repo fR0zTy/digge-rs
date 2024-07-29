@@ -14,7 +14,12 @@ const MAP_YSIZE: u32 = 64;
 const TILE_XSIZE: f32 = 32.0;
 const TILE_YSIZE: f32 = 32.0;
 
-fn spawn_tilemap(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn spawn_tilemap(
+    mut commands: Commands, 
+    asset_server: Res<AssetServer>, 
+    #[cfg(all(not(feature = "atlas"), feature = "render"))] array_texture_loader: Res<
+ArrayTextureLoader,
+>) {
     // Create a tilemap entity a little early.
     // We want this entity early because we need to tell each tile which tilemap entity
     // it is associated with. This is done with the TilemapId component on each tile.
@@ -57,6 +62,18 @@ fn spawn_tilemap(mut commands: Commands, asset_server: Res<AssetServer>) {
     let map_type = TilemapType::default();
 
     // Load a texture to be used for displaying the tiles;
+
+    // Add atlas to array texture loader so it's preprocessed before we need to use it.
+    // Only used when the atlas feature is off and we are using array textures.
+    #[cfg(all(not(feature = "atlas"), feature = "render"))]
+    {
+        array_texture_loader.add(TilemapArrayTexture {
+            texture: TilemapTexture::Single(asset_server.load("tile.png")),
+            tile_size,
+            ..Default::default()
+        });
+    }
+
     let texture_handle: Handle<Image> = asset_server.load("tile.png");
     commands.entity(tilemap_entity).insert(TilemapBundle {
         grid_size,
