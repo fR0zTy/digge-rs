@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is publishing to GitHub Actions 🚀
 on: [push, workflow_dispatch]
 jobs:
   build:
-    runs-on: rust-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
