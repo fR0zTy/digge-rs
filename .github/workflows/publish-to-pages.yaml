@@ -9,6 +9,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Build rust web app
         run: | 
+          rustup target add wasm32-unknown-unknown
           cargo build --target wasm32-unknown-unknown --features atlas,bevy/webgl2
         #  npx ng build --base-href https://axeljaeger.github.io/htt/
     #   - name: Upload Pages artifact
